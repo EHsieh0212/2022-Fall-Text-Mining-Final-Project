@@ -145,3 +145,7 @@ def getAllMaleArtistsSongs(list, href):
 
 
 getAllMaleArtistsSongs(artist, "https://mojim.com/twza1.htm")
+
+
+
+print("hello")
