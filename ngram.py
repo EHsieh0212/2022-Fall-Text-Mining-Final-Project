@@ -50,9 +50,3 @@ def generate_sent(model, num_words, text_seed, random_seed=42):
         content.append(token)
         n+=1
     return detokenize(content)
-
-one = "".join(generate_sent(model1, num_words=60, text_seed = ["下雨"], random_seed=13).split(" "))
-# two = "".join(generate_sent(model2, num_words=50, text_seed = ["愛你"], random_seed=15).split(" "))
-
-print(one)
-# print(two)
