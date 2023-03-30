@@ -21,7 +21,5 @@ def postInput():
     return jsonify({'return': str(result)})
 
 
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=4004, debug=True)
