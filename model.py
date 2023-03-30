@@ -133,7 +133,12 @@ def general(textName, lyricLength, seeding):
     print(f'{"="*50}')
     return result
 
+
+
 import pandas as pd
-# general('txt/Frankenstein', 10, 6)
-d = pd.read_csv("text/AllMalePrizedArtist.csv")
-print(d.shape)
+d = pd.read_csv("AllMalePrizedArtist_2.csv")
+data = list(d['lyric_ckip'])
+with open('data.txt', 'w') as f:
+    f.write('\n'.join(data))
+
+general("data", 10, 11)

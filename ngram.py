@@ -4,38 +4,6 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 from ast import literal_eval
 
-data = pd.read_csv("text/PiggyLo2_new_2.csv")
-data2 = pd.read_csv("text/JayChou2_new_2.csv")
-data3 = pd.read_csv("text/AllMalePrizedArtist_2.csv")
-data4 = pd.concat([data, data2, data3], axis = 0)
-print(len(data4['lyric_ckip']))
-
-
-for i in range(data3.shape[0]):
-    tmp = data3["lyric_ckip"].iat[i]
-    tmp = literal_eval(tmp)
-    data3["lyric_ckip"].iat[i] = tmp
-
-for i in range(data.shape[0]):
-    tmp = data["lyric_jieba"].iat[i]
-    tmp = literal_eval(tmp)
-    data["lyric_jieba"].iat[i] = tmp
-
-
-corpus1 = list((data3['lyric_ckip']))
-corpus2 = list((data['lyric_jieba']))
-
-
-n = 2   #設定n-gram長度 (要以前多少個字計算字的機率)
-data_train1, padded_sents1 = padded_everygram_pipeline(n, corpus1)   #前處理: pad句子 + 切割n-gram + pad n-gram + 將所有內容壓平為一段text
-# data_train2, padded_sents2 = padded_everygram_pipeline(n, corpus2)
-
-model1 = MLE(n) #建模
-model1.fit(data_train1, padded_sents1)  #訓練mle model，計算n-gram機率
-
-model2 = MLE(n) #建模
-# model2.fit(data_train2, padded_sents2)  #訓練mle model，計算n-gram機率
-
 
 detokenize = TreebankWordDetokenizer().detokenize
 
@@ -51,8 +19,16 @@ def generate_sent(model, num_words, text_seed, random_seed=42):
         n+=1
     return detokenize(content)
 
-one = "".join(generate_sent(model1, num_words=60, text_seed = ["下雨"], random_seed=13).split(" "))
-# two = "".join(generate_sent(model2, num_words=50, text_seed = ["愛你"], random_seed=15).split(" "))
-
-print(one)
-# print(two)
+def predict(artist, length, gram, textSeed, seeding):
+    print("start predicting")
+    data = pd.read_csv(f"text/{artist}.csv")
+    for i in range(data.shape[0]):
+        tmp = data["lyric_ckip"].iat[i]
+        tmp = literal_eval(tmp)
+        data["lyric_ckip"].iat[i] = tmp
+    corpus = list(data['lyric_ckip'])
+    data_train, padded_sents = padded_everygram_pipeline(gram, corpus)
+    model = MLE(gram)
+    model.fit(data_train, padded_sents)
+    result = "".join(generate_sent(model, num_words=length, text_seed = [f"{textSeed}"], random_seed=seeding).split(" "))
+    return result
