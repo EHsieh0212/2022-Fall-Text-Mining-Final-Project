@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import model
-import ngram
+import models.model as model
+import models.ngram as ngram
 
 app = Flask(__name__)
 CORS(app)
@@ -9,14 +9,11 @@ CORS(app)
 ######################################################
 @app.route('/')
 def index():
-    a = model.general('jolin2', 40, 5)
-    return a
+    return "Test."
 
 @app.route('/predict', methods=['POST'])
 def postInput():
-    # 取得前端傳過來的數值
     req = request.get_json()
-    print(req)
     result = ngram.predict(req['name'], int(req['length']),int(req['gram']), req['textSeed'], int(req['seeding']))
     return jsonify({'return': str(result)})
 
